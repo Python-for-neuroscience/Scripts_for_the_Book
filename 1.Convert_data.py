@@ -2,30 +2,26 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-
-# Initialize a dictionary to store all data
+ 
+# Initialize a dictionary to store all data       subject identifier
 all_data = {
     'sample_num': [],
     'file_num': [],
     'sensor_position': [],
-    'sensor_value': []
+    'sensor_value': [],
+    'subject_identifier': []
 }
 
 # Process Data1 to Data248
 for i in range(1, 249):
-    try:
-        df = pd.read_csv(f'Data{i}.csv')
-        
+        df = pd.read_csv(f'Data{i}.csv')        
         all_data['sample_num'].extend(df["sample num"])
         all_data['file_num'].extend([i] * len(df))
         all_data['sensor_position'].extend(df["sensor position"])
         all_data['sensor_value'].extend(df["sensor value"])
-
-        print(f"Processed Data{i}")
-    except FileNotFoundError:
-        print(f"Data{i}.csv not found. Skipping...")
-    except Exception as e:
-        print(f"Error processing Data{i}.csv: {str(e)}")
+        all_data['subject_identifier'].extend(df["subject identifier"])
+        
+print ("ok")
 
 # Create a DataFrame from the combined data
 combined_df = pd.DataFrame(all_data)
@@ -33,13 +29,13 @@ combined_df = pd.DataFrame(all_data)
 # Pivot the data to create columns for each sensor
 pivoted_df = combined_df.pivot_table(
     values='sensor_value', 
-    index=['file_num', 'sample_num'], 
-    columns='sensor_position', 
+    index=['file_num', 'sample_num','subject_identifier'], 
+    columns='sensor_position',
     aggfunc='first'
 ).reset_index()
 
 # Save all data to a single CSV file
-pivoted_df.to_csv("all_data_combined.csv", index=False)
+pivoted_df.to_csv("67all_data_combined.csv", index=False)
 print("All data saved to all_data_combined.csv")
 
 # Print some statistics
